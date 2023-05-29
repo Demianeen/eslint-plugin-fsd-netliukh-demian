@@ -1,4 +1,6 @@
-# Check pathes according to Feature-sliced design methodology. (`check-path`)
+# Check is path should be relative according to Feature-sliced design methodology (`netliukh-demian-fsd-plugin/check-path`)
+
+<!-- end auto-generated rule header -->
 
 Please describe the origin of the rule here.
 

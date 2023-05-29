@@ -40,6 +40,9 @@ Then configure the rules you want to use under the rules section.
 
 <!-- begin auto-generated rules list -->
 
-TODO: Run eslint-doc-generator to generate the rules list.
+| Name                                                   | Description                                                                      |
+| :----------------------------------------------------- | :------------------------------------------------------------------------------- |
+| [check-path](docs/rules/check-path.md)                 | Check is path should be relative according to Feature-sliced design methodology. |
+| [public-api-imports](docs/rules/public-api-imports.md) | Checks if absolute path imports from public api                                  |
 
 <!-- end auto-generated rules list -->

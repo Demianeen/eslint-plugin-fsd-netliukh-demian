@@ -1,4 +1,6 @@
-# Checks if absolute path imports from public api (`public-api-imports`)
+# Checks if absolute path imports from public api (`netliukh-demian-fsd-plugin/public-api-imports`)
+
+<!-- end auto-generated rule header -->
 
 Please describe the origin of the rule here.
 
