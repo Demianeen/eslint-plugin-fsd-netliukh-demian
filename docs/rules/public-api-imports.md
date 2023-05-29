@@ -1,4 +1,4 @@
-# Check pathes according to Feature-sliced design methodology. (`check-path`)
+# Checks if absolute path imports from public api (`public-api-imports`)
 
 Please describe the origin of the rule here.
 
@@ -8,22 +8,15 @@ This rule aims to...
 
 Examples of **incorrect** code for this rule:
 
-from/to
-
 ```js
-'entities/User/ui/UserCard',
-  'entities/User/model/slice/userSlice'
-'entities/User', 'entities/User/ui/UserCard/UserCard'
-'entities/User/ui/UserCard', 'entities/User'
+import { UserCard } from 'entities/User/ui/UserCard/UserCard'
+import { UserCard } from '@/entities/User/ui/UserCard/UserCard'
 ```
 
 Examples of **correct** code for this rule:
 
-from/to
-
 ```js
-'features/LoginByUsername/ui/LoginForm',
-  'entities/User/ui/UserCard'
+import { UserCard } from 'entities/User'
 ```
 
 ### Options
@@ -32,7 +25,7 @@ alias - separator for absolute imports
 
 Example: `alias: '@/'`
 
-Will allow the following code: 
+Will allow the following code:
 ```js
 import { UserCard } from '@/entities/User/ui/UserCard/UserCard'
 ```
