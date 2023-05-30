@@ -1,6 +1,6 @@
 {
   "name": "eslint-plugin-netliukh-demian-fsd-plugin",
-  "version": "0.0.8",
+  "version": "0.0.9",
   "description": "Plugin designed to find and fix Feature-sliced design violations.",
   "keywords": [
     "eslint",

@@ -34,6 +34,7 @@ ruleTester.run('layer-imports', rule, {
       filename: resolveProjectPath('features', 'NewFeature'),
       code: "import { UserCard } from 'entities/User'",
     },
+    // should work outside src
     {
       filename: resolveProjectPath(
         '..',
@@ -42,6 +43,11 @@ ruleTester.run('layer-imports', rule, {
         'newBabelPlugin'
       ),
       code: "import { PluginItem } from '@babel/core'",
+    },
+    // shared can import shared
+    {
+      filename: resolveProjectPath('shared', 'Select'),
+      code: "import { PluginItem } from 'shared/Button'",
     },
     // should work with alias
     {
