@@ -1,6 +1,6 @@
 const path = require('path')
 
-const resolveProjectPath = (...segments) =>
+const resolveSourcePath = (...segments) =>
   path.resolve(__dirname, 'src', ...segments)
 
-module.exports = resolveProjectPath
+module.exports = resolveSourcePath

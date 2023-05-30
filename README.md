@@ -43,6 +43,7 @@ Then configure the rules you want to use under the rules section.
 | Name                                                   | Description                                                                      |
 | :----------------------------------------------------- | :------------------------------------------------------------------------------- |
 | [check-path](docs/rules/check-path.md)                 | Check is path should be relative according to Feature-sliced design methodology. |
+| [layer-imports](docs/rules/layer-imports.md)           | Check for imports from upper layers                                              |
 | [public-api-imports](docs/rules/public-api-imports.md) | Checks if absolute path imports from public api                                  |
 
 <!-- end auto-generated rules list -->

@@ -32,6 +32,14 @@ Will allow the following code:
 import { UserCard } from '@/entities/User/ui/UserCard/UserCard'
 ```
 
+testFilesPatters - pattern for files that can use testing public api
+
+Example: `testFilesPatterns: ['**/*.test.ts', '**/storybook/*']`
+
+```js
+import { mockUser } from 'entities/User/testing'
+```
+
 ## When Not To Use It
 
 When you not use Feature-sliced design methodology
