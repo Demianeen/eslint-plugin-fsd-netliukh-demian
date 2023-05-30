@@ -34,6 +34,15 @@ ruleTester.run('layer-imports', rule, {
       filename: resolveProjectPath('features', 'NewFeature'),
       code: "import { UserCard } from 'entities/User'",
     },
+    {
+      filename: resolveProjectPath(
+        '..',
+        'config',
+        'babel',
+        'newBabelPlugin'
+      ),
+      code: "import { PluginItem } from '@babel/core'",
+    },
     // should work with alias
     {
       filename: resolveProjectPath('features', 'NewFeature'),
