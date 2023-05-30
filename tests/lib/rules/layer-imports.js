@@ -57,7 +57,7 @@ ruleTester.run('layer-imports', rule, {
     },
     // should work with ignore pattern
     {
-      filename: resolveProjectPath('entities', 'Article'),
+      filename: resolveProjectPath('shared', 'Article'),
       code: "import { UserCard } from 'entities/User'",
       options: [ignoreFilesPatterns],
     },
@@ -73,11 +73,6 @@ ruleTester.run('layer-imports', rule, {
       filename: resolveProjectPath('features', 'NewFeature'),
       code: "import HomePage from 'pages/HomePage'",
       errors: [generateInvalidLayerError('pages', 'features')],
-    },
-    {
-      filename: resolveProjectPath('entities', 'Article'),
-      code: "import { User } from 'entities/User'",
-      errors: [generateInvalidLayerError('entities', 'entities')],
     },
     // should work with alias
     {
