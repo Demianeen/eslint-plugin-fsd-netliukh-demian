@@ -9,6 +9,8 @@ const rule = require('../../../lib/rules/check-path'),
 const path = require('path')
 const resolveProjectPath = require('../helpers/resolveProjectPath')
 
+const { messageIds } = rule
+
 const ruleTester = new RuleTester({
   parserOptions: {
     ecmaVersion: 6,
@@ -19,9 +21,6 @@ const ruleTester = new RuleTester({
 const alias = {
   alias: '@/',
 }
-
-const errorMessage =
-  'All paths should be relative within the same slice.'
 
 ruleTester.run('check-path', rule, {
   valid: [
@@ -42,15 +41,17 @@ ruleTester.run('check-path', rule, {
         'entities',
         'User',
         'ui',
-        'UserCard'
+        'UserCardHeader',
+        'UserCardHeader.ts'
       ),
       code: "import { UserCard } from 'entities/User/ui/UserCard/UserCard'",
       errors: [
         {
-          message: errorMessage,
-          type: 'ImportDeclaration',
+          messageId: messageIds.RELATIVE_ERROR,
+          type: 'Literal',
         },
       ],
+      output: "import { UserCard } from '../UserCard/UserCard'",
     },
     // should work with alias
     {
@@ -58,16 +59,18 @@ ruleTester.run('check-path', rule, {
         'entities',
         'User',
         'ui',
-        'UserCard'
+        'UserCardHeader',
+        'UserCardHeader.ts'
       ),
       code: "import { UserCard } from '@/entities/User/ui/UserCard/UserCard'",
       errors: [
         {
-          message: errorMessage,
-          type: 'ImportDeclaration',
+          messageId: messageIds.RELATIVE_ERROR,
+          type: 'Literal',
         },
       ],
       options: [alias],
+      output: "import { UserCard } from '../UserCard/UserCard'",
     },
   ],
 })
