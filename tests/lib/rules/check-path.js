@@ -72,5 +72,23 @@ ruleTester.run('check-path', rule, {
       options: [alias],
       output: "import { UserCard } from '../UserCard/UserCard'",
     },
+    {
+      filename: resolveProjectPath(
+        'shared',
+        'lib',
+        'components',
+        'AnimationProvider',
+        'lib',
+        'useAnimationLibs.ts'
+      ),
+      code: "import { AnimationContext } from 'shared/lib/components/AnimationProvider/lib/AnimationContext'",
+      errors: [
+        {
+          messageId: messageIds.RELATIVE_ERROR,
+          type: 'Literal',
+        },
+      ],
+      output: "import { AnimationContext } from './AnimationContext'",
+    },
   ],
 })
