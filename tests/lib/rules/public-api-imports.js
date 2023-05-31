@@ -7,7 +7,9 @@
 const rule = require('../../../lib/rules/public-api-imports'),
   RuleTester = require('eslint').RuleTester
 
-const resolveProjectPath = require('../helpers/resolveProjectPath')
+const { messageIds } = rule
+
+const path = require('path')
 
 const ruleTester = new RuleTester({
   parserOptions: {
@@ -15,6 +17,9 @@ const ruleTester = new RuleTester({
     sourceType: 'module',
   },
 })
+
+const resolveMockProjectPath = (...segments) =>
+  path.resolve(__dirname, '..', 'mocks', 'src', ...segments)
 
 const alias = {
   alias: '@/',
@@ -25,14 +30,12 @@ const testingFilesPatterns = {
 }
 
 const publicApiError = {
-  message:
-    'Absolute import allowed only from public API (index.ts).',
+  messageId: messageIds.PUBLIC_ERROR,
   type: 'ImportDeclaration',
 }
 
 const testApiError = {
-  message:
-    'Only test files can import from testing public api.',
+  messageId: messageIds.TESTING_PUBLIC_ERROR,
   type: 'ImportDeclaration',
 }
 
@@ -48,7 +51,7 @@ ruleTester.run('public-api-imports', rule, {
     },
     // should work with test file patterns
     {
-      filename: resolveProjectPath(
+      filename: resolveMockProjectPath(
         'features',
         'LoginByUsername',
         'ui',
@@ -61,18 +64,32 @@ ruleTester.run('public-api-imports', rule, {
 
   invalid: [
     {
+      filename: resolveMockProjectPath(
+        'features',
+        'LoginByUsername',
+        'ui',
+        'LoginForm.ts'
+      ),
       code: "import { UserCard } from 'entities/User/ui/UserCard/UserCard'",
       errors: [publicApiError],
+      output: "import { UserCard } from 'entities/User'",
     },
     // should work with alias
     {
+      filename: resolveMockProjectPath(
+        'features',
+        'LoginByUsername',
+        'ui',
+        'LoginForm.ts'
+      ),
       code: "import { UserCard } from '@/entities/User/ui/UserCard/UserCard'",
       errors: [publicApiError],
       options: [alias],
+      output: "import { UserCard } from '@/entities/User'",
     },
     // should work with test file patterns
     {
-      filename: resolveProjectPath(
+      filename: resolveMockProjectPath(
         'features',
         'LoginByUsername',
         'ui',
@@ -83,13 +100,25 @@ ruleTester.run('public-api-imports', rule, {
       errors: [testApiError],
     },
     {
-      filename: resolveProjectPath(
+      filename: resolveMockProjectPath(
         'features',
         'LoginByUsername',
         'ui',
         'LoginForm.test.ts'
       ),
       code: "import { mockUser } from 'entities/User/testing/mockUser.ts'",
+      options: [testingFilesPatterns],
+      errors: [publicApiError],
+      output: "import { mockUser } from 'entities/User/testing'",
+    },
+    {
+      filename: resolveMockProjectPath(
+        'features',
+        'LoginByUsername',
+        'ui',
+        'LoginForm.test.ts'
+      ),
+      code: "import { mockUser2 } from 'entities/User/testing/mockUser.ts'",
       options: [testingFilesPatterns],
       errors: [publicApiError],
     },

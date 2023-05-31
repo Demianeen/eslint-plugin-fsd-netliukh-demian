@@ -34,7 +34,7 @@ ruleTester.run('layer-imports', rule, {
       filename: resolveProjectPath('features', 'NewFeature'),
       code: "import { UserCard } from 'entities/User'",
     },
-    // should work outside src
+    // should work outside mocks
     {
       filename: resolveProjectPath(
         '..',
