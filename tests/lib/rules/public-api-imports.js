@@ -10,6 +10,7 @@ const rule = require('../../../lib/rules/public-api-imports'),
 const { messageIds } = rule
 
 const path = require('path')
+const resolveProjectPath = require('../helpers/resolveProjectPath')
 
 const ruleTester = new RuleTester({
   parserOptions: {
@@ -31,11 +32,16 @@ const testingFilesPatterns = {
 
 const publicApiError = {
   messageId: messageIds.PUBLIC_ERROR,
-  type: 'ImportDeclaration',
+  type: 'Literal',
 }
 
 const testApiError = {
   messageId: messageIds.TESTING_PUBLIC_ERROR,
+  type: 'Literal',
+}
+
+const noFileInPublicApiError = {
+  messageId: messageIds.NO_FILE_IN_PUBLIC_ERROR,
   type: 'ImportDeclaration',
 }
 
@@ -111,6 +117,7 @@ ruleTester.run('public-api-imports', rule, {
       errors: [publicApiError],
       output: "import { mockUser } from 'entities/User/testing'",
     },
+    // should work when there is no file inside public apis
     {
       filename: resolveMockProjectPath(
         'features',
@@ -120,7 +127,33 @@ ruleTester.run('public-api-imports', rule, {
       ),
       code: "import { mockUser2 } from 'entities/User/testing/mockUser.ts'",
       options: [testingFilesPatterns],
-      errors: [publicApiError],
+      errors: [noFileInPublicApiError, publicApiError],
+    },
+    // should work when there is no testing.ts
+    {
+      filename: resolveMockProjectPath(
+        'entities',
+        'EntityWithoutTesting',
+        'ui',
+        'UserCardHeader',
+        'UserCardHeader.ts'
+      ),
+      code: "import { mockUser } from '@/entities/EntityWithoutTesting/model/mocks/mockUser'",
+      errors: [noFileInPublicApiError, publicApiError],
+      options: [alias],
+    },
+    // should work when there is no second file in index.ts
+    {
+      filename: resolveMockProjectPath(
+        'entities',
+        'EntityWithoutTesting',
+        'ui',
+        'UserCardHeader',
+        'UserCardHeader.ts'
+      ),
+      code: "import { mockUser2 } from 'entities/User/testing/mockUser.ts'",
+      errors: [noFileInPublicApiError, publicApiError],
+      options: [alias],
     },
   ],
 })
