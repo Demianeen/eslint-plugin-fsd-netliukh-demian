@@ -10,7 +10,6 @@ const rule = require('../../../lib/rules/public-api-imports'),
 const { messageIds } = rule
 
 const path = require('path')
-const resolveProjectPath = require('../helpers/resolveProjectPath')
 
 const ruleTester = new RuleTester({
   parserOptions: {
@@ -104,6 +103,7 @@ ruleTester.run('public-api-imports', rule, {
       code: "import { mockUser } from 'entities/User/testing'",
       options: [testingFilesPatterns],
       errors: [testApiError],
+      output: null,
     },
     {
       filename: resolveMockProjectPath(
@@ -128,6 +128,7 @@ ruleTester.run('public-api-imports', rule, {
       code: "import { mockUser2 } from 'entities/User/testing/mockUser.ts'",
       options: [testingFilesPatterns],
       errors: [noFileInPublicApiError, publicApiError],
+      output: null,
     },
     // should work when there is no testing.ts
     {
@@ -141,6 +142,7 @@ ruleTester.run('public-api-imports', rule, {
       code: "import { mockUser } from '@/entities/EntityWithoutTesting/model/mocks/mockUser'",
       errors: [noFileInPublicApiError, publicApiError],
       options: [alias],
+      output: null,
     },
     // should work when there is no second file in index.ts
     {
@@ -154,6 +156,7 @@ ruleTester.run('public-api-imports', rule, {
       code: "import { mockUser2 } from 'entities/User/testing/mockUser.ts'",
       errors: [noFileInPublicApiError, publicApiError],
       options: [alias],
+      output: null,
     },
   ],
 })

@@ -6,7 +6,6 @@
 
 const rule = require('../../../lib/rules/check-path'),
   RuleTester = require('eslint').RuleTester
-const path = require('path')
 const resolveProjectPath = require('../helpers/resolveProjectPath')
 
 const { messageIds } = rule
@@ -18,8 +17,20 @@ const ruleTester = new RuleTester({
   },
 })
 
+// options
 const alias = {
   alias: '@/',
+}
+
+// errors
+const relativeError = {
+  messageId: messageIds.RELATIVE_ERROR,
+  type: 'Literal',
+}
+
+const publicApiError = {
+  messageId: messageIds.PUBLIC_API_ERROR,
+  type: 'Literal',
 }
 
 ruleTester.run('check-path', rule, {
@@ -32,6 +43,17 @@ ruleTester.run('check-path', rule, {
         'LoginForm'
       ),
       code: "import { UserCard } from 'entities/User/ui/UserCard/UserCard'",
+    },
+    // path outside src should not be fixed by default
+    {
+      filename: resolveProjectPath(
+        '..',
+        'cypress',
+        'e2e',
+        'common',
+        'routing.ts'
+      ),
+      code: "import { AnimationContext } from 'shared/lib/components/AnimationProvider/lib/AnimationContext'",
     },
   ],
 
@@ -63,12 +85,7 @@ ruleTester.run('check-path', rule, {
         'UserCardHeader.ts'
       ),
       code: "import { UserCard } from '@/entities/User/ui/UserCard/UserCard'",
-      errors: [
-        {
-          messageId: messageIds.RELATIVE_ERROR,
-          type: 'Literal',
-        },
-      ],
+      errors: [relativeError],
       options: [alias],
       output: "import { UserCard } from '../UserCard/UserCard'",
     },
@@ -82,13 +99,62 @@ ruleTester.run('check-path', rule, {
         'useAnimationLibs.ts'
       ),
       code: "import { AnimationContext } from 'shared/lib/components/AnimationProvider/lib/AnimationContext'",
-      errors: [
-        {
-          messageId: messageIds.RELATIVE_ERROR,
-          type: 'Literal',
-        },
-      ],
+      errors: [relativeError],
       output: "import { AnimationContext } from './AnimationContext'",
     },
+    // import from public api in the same slice
+    {
+      filename: resolveProjectPath(
+        'entities',
+        'User',
+        'ui',
+        'UserCardHeader',
+        'UserCardHeader.ts'
+      ),
+      code: "import { UserCard } from 'entities/User'",
+      errors: [publicApiError],
+      output: null,
+    },
+    // import from testing public api in the same slice
+    {
+      filename: resolveProjectPath(
+        'entities',
+        'User',
+        'ui',
+        'UserCardHeader',
+        'UserCardHeader.ts'
+      ),
+      code: "import { UserCard } from 'entities/User/testing'",
+      errors: [publicApiError],
+      output: null,
+    },
+    // import from testing folder
+    {
+      filename: resolveProjectPath(
+        'entities',
+        'User',
+        'ui',
+        'UserCardHeader',
+        'UserCardHeader.ts'
+      ),
+      code: "import { UserCard } from 'entities/User/testing/mockUser'",
+      errors: [relativeError],
+      output: "import { UserCard } from '../../testing/mockUser'",
+    },
+    // path outside src should be fixed if shouldFixOutsideSrc is true
+    // {
+    //   filename: resolveProjectPath(
+    //     '..',
+    //     'cypress',
+    //     'e2e',
+    //     'common',
+    //     'routing.ts'
+    //   ),
+    //   code: "import { AnimationContext } from 'shared/lib/components/AnimationProvider/lib/AnimationContext'",
+    //   options: [shouldFixOutsideSrc],
+    //   errors: [relativeError],
+    //   output:
+    //     "import { AnimationContext } from '../../src/shared/lib/components/AnimationProvider/lib/AnimationContext'",
+    // },
   ],
 })
