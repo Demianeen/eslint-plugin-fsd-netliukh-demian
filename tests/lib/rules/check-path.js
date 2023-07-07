@@ -55,6 +55,17 @@ ruleTester.run('check-path', rule, {
       ),
       code: "import { AnimationContext } from 'shared/lib/components/AnimationProvider/lib/AnimationContext'",
     },
+    // should ignore relative path
+    {
+      filename: resolveProjectPath(
+        '..',
+        'cypress',
+        'e2e',
+        'common',
+        'routing.ts'
+      ),
+      code: "import { method } from './lib'",
+    },
   ],
 
   invalid: [

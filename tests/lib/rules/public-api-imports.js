@@ -65,6 +65,26 @@ ruleTester.run('public-api-imports', rule, {
       code: "import { mockUser } from 'entities/User/testing'",
       options: [testingFilesPatterns],
     },
+    // should skip default exports
+    {
+      filename: resolveMockProjectPath(
+        'features',
+        'LoginByUsername',
+        'ui',
+        'LoginForm.ts'
+      ),
+      code: "import UserCard from 'entities/User/ui/UserCard/UserCard'",
+    },
+    // should work with import without specifiers
+    {
+      filename: resolveMockProjectPath(
+        'features',
+        'LoginByUsername',
+        'ui',
+        'LoginForm.ts'
+      ),
+      code: "import 'index.css'",
+    },
   ],
 
   invalid: [
